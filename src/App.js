@@ -1,199 +1,206 @@
 import React, { useState } from 'react';
 import forge from 'node-forge';
+import { Button, Select, Input, message, Modal, Typography, List } from 'antd';
 import './App.css';
 
-const styles = {
-  App: {
-    margin:'auto',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#000',
-    padding: '20px',
-    borderRadius: '8px',
-    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-    maxWidth: '600px',
-    width: '100%',
-  },
-
-  AppHeader: {
-    textAlign: 'center',
-  },
-
-  h1: {
-    
-    fontSize: '40px',
-    marginBottom: '20px',
-    color:'#fff'
-  },
-
-  textarea: {
-    width: '100%',
-    padding: '10px',
-    marginTop: '10px',
-    marginBottom: '20px',
-    borderRadius: '4px',
-    border: '1px solid #cccccc',
-    fontSize: '16px',
-  },
-
-  button: {
-    backgroundColor: '#007bff',
-    color: 'white',
-    padding: '10px 15px',
-    border: 'none',
-    borderRadius: '4px',
-    cursor: 'pointer',
-    fontSize: '16px',
-    marginRight: '10px',
-    transition: 'background-color 0.3s ease',
-  },
-
-  h2: {
-    color: '#fff',
-    fontSize: '20px',
-    marginTop: '30px',
-    marginBottom: '10px',
-  },
-
-  ul: {
-    listStyleType: 'none',
-    padding: 0,
-  },
-
-  li: {
-    backgroundColor: '#f9f9f9',
-    padding: '10px',
-    marginBottom: '10px',
-    borderRadius: '4px',
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-
-  liButton: {
-    backgroundColor: '#28a745',
-    marginRight: 0,
-    borderRadius:'8px'
-  },
-};
+const { Option } = Select;
+const { TextArea } = Input;
 
 function App() {
+  const [users, setUsers] = useState([
+    { name: 'Carlos', privateKey: null, publicKey: null },
+    { name: 'Helyézer', privateKey: null, publicKey: null },
+    { name: 'Luís', privateKey: null, publicKey: null },
+    { name: 'Felipe', privateKey: null, publicKey: null }
+  ]);
+  const [selectedUser, setSelectedUser] = useState(users[0]);
   const [plainText, setPlainText] = useState('');
   const [documents, setDocuments] = useState([]);
-  const [privateKey, setPrivateKey] = useState(null);
-  const [publicKey, setPublicKey] = useState(null);
-  const [signature, setSignature] = useState(null);
-  const [hasGeneratedKeys, setHasGeneratedKeys] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [userKeys, setUserKeys] = useState({ publicKey: '', privateKey: '' });
 
-  const generateRSAKeys = () => {
+  const generateRSAKeys = (userIndex) => {
+    if (users[userIndex].privateKey && users[userIndex].publicKey) {
+      message.info(`${users[userIndex].name} já possui chaves RSA.`);
+      return;
+    }
+  
     const keypair = forge.pki.rsa.generateKeyPair({ bits: 2048 });
     const privateKeyPEM = forge.pki.privateKeyToPem(keypair.privateKey);
     const publicKeyPEM = forge.pki.publicKeyToPem(keypair.publicKey);
-
-    setPrivateKey(privateKeyPEM);
-    setPublicKey(publicKeyPEM);
-    setHasGeneratedKeys(true);
-
-    console.log("Chave Privada RSA 2048:");
-    console.log(privateKeyPEM);
-    console.log("\nChave Pública RSA 2048:");
-    console.log(publicKeyPEM);
+  
+    const updatedUsers = [...users];
+    updatedUsers[userIndex].privateKey = privateKeyPEM;
+    updatedUsers[userIndex].publicKey = publicKeyPEM;
+    setUsers(updatedUsers);
+  
+    message.success(`Chaves RSA geradas para ${updatedUsers[userIndex].name}`);
   };
-
+  
   const signDocument = () => {
-    if (!privateKey) {
-      alert('Gere as chaves primeiro!');
+    const user = selectedUser;
+    if (!user.privateKey) {
+      message.error(`Gere as chaves para ${user.name} primeiro!`);
       return;
     }
 
     const md = forge.md.sha256.create();
     md.update(plainText, 'utf8');
 
-    const privateKeyObj = forge.pki.privateKeyFromPem(privateKey);
+    const privateKeyObj = forge.pki.privateKeyFromPem(user.privateKey);
     const signature = privateKeyObj.sign(md);
 
-    setSignature(signature); // Armazena a assinatura no estado
-    alert('Documento assinado!');
-  };
+    const currentDateTime = new Date().toLocaleString();
 
-  const saveDocument = () => {
-    if (!signature) {
-      alert('O documento precisa ser assinado antes de ser salvo.');
-      return;
-    }
-
-    setDocuments([...documents, { plainText, signature }]);
+    setDocuments([...documents, { plainText, signature, dateTime: currentDateTime, user }]);
     setPlainText('');
-    setSignature(null); // Reseta a assinatura após salvar
   };
 
-  const verifySignature = (signature, originalMessage) => {
-    if (!signature) {
-      alert('Este documento não foi assinado.');
-      return;
-    }
+  const saveWithoutSigning = () => {
+    const user = selectedUser;
+    const currentDateTime = new Date().toLocaleString();
+    setDocuments([...documents, { plainText, signature: null, dateTime: currentDateTime, user }]);
+    setPlainText('');
+  };
 
-    if (!publicKey) {
-      alert('Gere as chaves primeiro!');
+  const verifySignature = (signature, originalMessage, documentUser) => {
+    if (!signature) {
+      message.warning('Este documento não foi assinado.');
       return;
     }
 
     const md = forge.md.sha256.create();
     md.update(originalMessage, 'utf8');
 
-    const publicKeyObj = forge.pki.publicKeyFromPem(publicKey);
+    const publicKeyObj = forge.pki.publicKeyFromPem(documentUser.publicKey);
     const verified = publicKeyObj.verify(md.digest().bytes(), signature);
 
     if (verified) {
-      alert('Assinatura válida!');
+      message.success(`Assinatura válida!\nUsuário: ${documentUser.name}`);
     } else {
-      alert('Assinatura inválida!');
+      message.error('Assinatura inválida!');
     }
   };
 
+  const showKeys = () => {
+    if (!selectedUser.privateKey || !selectedUser.publicKey) {
+      message.warning('O usuário ainda não gerou as chaves.');
+      return;
+    }
+
+    setUserKeys({
+      publicKey: selectedUser.publicKey,
+      privateKey: selectedUser.privateKey,
+    });
+    setIsModalVisible(true);
+  };
+
   return (
-    <div style={styles.App}>
-      <header style={styles.AppHeader}>
-        <h1 style={styles.h1}>Assinador Digital com RSA</h1>
+    <div className="App">
+      <header className="App-header">
+        <h1>Assinador Digital com RSA</h1>
+
+        <div>
+          <label>
+            Selecione o usuário:
+            <Select
+              value={selectedUser.name}
+              onChange={(value) => setSelectedUser(users.find(user => user.name === value))}
+              style={{ width: 200 }}
+            >
+              {users.map((user, index) => (
+                <Option key={index} value={user.name}>
+                  {user.name}
+                </Option>
+              ))}
+            </Select>
+          </label>
+        </div>
+
+        <Button 
+          type="primary" 
+          style={{ marginTop: '10px' }} 
+          onClick={() => generateRSAKeys(users.findIndex(user => user.name === selectedUser.name))}
+        >
+          Gerar Chaves RSA para {selectedUser.name}
+        </Button>
         
-        {/* Botão para gerar as chaves RSA */}
-        <button style={styles.button} onClick={generateRSAKeys}>Gerar Chaves RSA</button>
+        <Button style={{ marginTop: '10px' }} onClick={showKeys}>
+          Exibir Chaves de {selectedUser.name}
+        </Button>
         
-        {/* Campo de texto para o usuário digitar o documento */}
-        <textarea
-          style={styles.textarea}
+        <TextArea
           value={plainText}
           onChange={(e) => setPlainText(e.target.value)}
-          rows="4"
-          cols="50"
+          rows={4}
           placeholder="Digite seu texto aqui"
+          style={{ marginTop: '20px', width: '400px' }}
         />
-        <br />
-
-        {/* Botões só aparecem se as chaves foram geradas */}
-        {hasGeneratedKeys && (
-          <>
-            <button style={styles.button} onClick={signDocument}>Assinar Documento</button>
-            <button style={styles.button} onClick={saveDocument}>Salvar</button>
-          </>
-        )}
-
-        <h2 style={styles.h2}>Documentos</h2>
         
-        <ul style={styles.ul}>
-          {documents.map((doc, index) => (
-            <li key={index} style={styles.li}>
-              {doc.plainText}
-              <button style={styles.liButton} onClick={() => verifySignature(doc.signature, doc.plainText)}>Verificar Assinatura</button>
-            </li>
-          ))}
-        </ul>
+        <div style={{ marginTop: '10px' }}>
+          <Button type="primary" onClick={signDocument}>Assinar Documento</Button>
+          <Button onClick={saveWithoutSigning} style={{ marginLeft: '10px' }}>
+            Salvar sem Assinar
+          </Button>
+        </div>
+
+        <h2>Documentos</h2>
+        
+        <List
+          dataSource={documents}
+          renderItem={(doc, index) => (
+            <List.Item
+              actions={[
+                <Button 
+                  type="primary" 
+                  onClick={() => verifySignature(doc.signature, doc.plainText, doc.user)}
+                >
+                  Verificar Assinatura
+                </Button>,
+                <Button 
+                  type="danger" 
+                  onClick={() => {
+                    const updatedDocuments = documents.filter((_, docIndex) => docIndex !== index);
+                    setDocuments(updatedDocuments);
+                  }}
+                >
+                  Excluir Documento
+                </Button>
+              ]}
+            >
+              <List.Item.Meta
+                title={`Documento ${index + 1} - Usuário: ${doc.user.name}`}
+                description={
+                  <>
+                    <p><strong>Texto:</strong> {doc.plainText}</p>
+                    <p><strong>Data e Hora:</strong> {doc.dateTime}</p>
+                  </>
+                }
+              />
+            </List.Item>
+          )}
+        />
       </header>
+
+      <Modal
+        title={`Chaves de ${selectedUser.name}`}
+        visible={isModalVisible}
+        onCancel={() => setIsModalVisible(false)}
+        footer={[
+          <Button key="close" type="primary" onClick={() => setIsModalVisible(false)}>
+            Fechar
+          </Button>,
+        ]}
+      >
+        <Typography.Paragraph copyable={{ text: userKeys.publicKey }}>
+          <strong>Chave Pública:</strong> <br /> {userKeys.publicKey}
+        </Typography.Paragraph>
+        <Typography.Paragraph copyable={{ text: userKeys.privateKey }}>
+          <strong>Chave Privada:</strong> <br /> {userKeys.privateKey}
+        </Typography.Paragraph>
+      </Modal>
     </div>
   );
 }
 
 export default App;
-
-
