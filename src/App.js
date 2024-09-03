@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import forge from 'node-forge';
-import { Button, Select, Input, message, Modal, Typography, List } from 'antd';
+import { Button, Select, Input, message, Modal, Typography, List, Row, Col } from 'antd';
 import './App.css';
 
 const { Option } = Select;
@@ -117,17 +117,42 @@ function App() {
           </label>
         </div>
 
-        <Button 
-          type="primary" 
-          style={{ marginTop: '10px' }} 
-          onClick={() => generateRSAKeys(users.findIndex(user => user.name === selectedUser.name))}
-        >
-          Gerar Chaves RSA para {selectedUser.name}
-        </Button>
-        
-        <Button style={{ marginTop: '10px' }} onClick={showKeys}>
-          Exibir Chaves de {selectedUser.name}
-        </Button>
+        <Row gutter={16} style={{ marginTop: '20px' }}>
+          <Col>
+            <Button 
+              type="primary" 
+              onClick={() => generateRSAKeys(users.findIndex(user => user.name === selectedUser.name))}
+              className="action-button"
+            >
+              Gerar Chaves RSA
+            </Button>
+          </Col>
+          <Col>
+            <Button 
+              onClick={showKeys}
+              className="action-button"
+            >
+              Exibir Chaves
+            </Button>
+          </Col>
+          <Col>
+            <Button 
+              type="primary" 
+              onClick={signDocument}
+              className="action-button"
+            >
+              Assinar Documento
+            </Button>
+          </Col>
+          <Col>
+            <Button 
+              onClick={saveWithoutSigning}
+              className="action-button"
+            >
+              Salvar sem Assinar
+            </Button>
+          </Col>
+        </Row>
         
         <TextArea
           value={plainText}
@@ -137,14 +162,7 @@ function App() {
           style={{ marginTop: '20px', width: '400px' }}
         />
         
-        <div style={{ marginTop: '10px' }}>
-          <Button type="primary" onClick={signDocument}>Assinar Documento</Button>
-          <Button onClick={saveWithoutSigning} style={{ marginLeft: '10px' }}>
-            Salvar sem Assinar
-          </Button>
-        </div>
-
-        <h2>Documentos</h2>
+        <h2 style={{ marginTop: '20px' }}>Documentos</h2>
         
         <List
           dataSource={documents}
