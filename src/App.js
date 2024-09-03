@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import forge from 'node-forge';
-import { Button, Select, Input, message, Modal, Typography, List, Row, Col } from 'antd';
+import { Button, Select, Input, message, Modal, Typography, List, Row, Col, Divider } from 'antd';
 import './App.css';
+import MenuPrincipal from './Menu';
 
-const { Option } = Select;
-const { TextArea } = Input;
 
 function App() {
   const [users, setUsers] = useState([
@@ -98,24 +97,8 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>Assinador Digital com RSA</h1>
-
-        <div>
-          <label>
-            Selecione o usuário:
-            <Select
-              value={selectedUser.name}
-              onChange={(value) => setSelectedUser(users.find(user => user.name === value))}
-              style={{ width: 200 }}
-            >
-              {users.map((user, index) => (
-                <Option key={index} value={user.name}>
-                  {user.name}
-                </Option>
-              ))}
-            </Select>
-          </label>
-        </div>
+        <h1>Seja Bem Vindo Usuário</h1>
+        <Divider orientation="left">ADICIONAR DOCUMENTO</Divider>
 
         <Row gutter={16} style={{ marginTop: '20px' }}>
           <Col>
@@ -152,52 +135,10 @@ function App() {
               Salvar sem Assinar
             </Button>
           </Col>
+          <Col>
+          
+          </Col>
         </Row>
-        
-        <TextArea
-          value={plainText}
-          onChange={(e) => setPlainText(e.target.value)}
-          rows={4}
-          placeholder="Digite seu texto aqui"
-          style={{ marginTop: '20px', width: '400px' }}
-        />
-        
-        <h2 style={{ marginTop: '20px' }}>Documentos</h2>
-        
-        <List
-          dataSource={documents}
-          renderItem={(doc, index) => (
-            <List.Item
-              actions={[
-                <Button 
-                  type="primary" 
-                  onClick={() => verifySignature(doc.signature, doc.plainText, doc.user)}
-                >
-                  Verificar Assinatura
-                </Button>,
-                <Button 
-                  type="danger" 
-                  onClick={() => {
-                    const updatedDocuments = documents.filter((_, docIndex) => docIndex !== index);
-                    setDocuments(updatedDocuments);
-                  }}
-                >
-                  Excluir Documento
-                </Button>
-              ]}
-            >
-              <List.Item.Meta
-                title={`Documento ${index + 1} - Usuário: ${doc.user.name}`}
-                description={
-                  <>
-                    <p><strong>Texto:</strong> {doc.plainText}</p>
-                    <p><strong>Data e Hora:</strong> {doc.dateTime}</p>
-                  </>
-                }
-              />
-            </List.Item>
-          )}
-        />
       </header>
 
       <Modal
