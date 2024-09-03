@@ -13,7 +13,7 @@ const Login = () => {
         // Verifica se as credenciais são as corretas
         if (email === 'Luis@gmail.com' && password === 'senha12345') {
             console.log('Login bem-sucedido');
-            navigate('/app');  // Redireciona para a página do App
+            navigate('/Documentos');  // Redireciona para a página do App
         } else {
             console.log('Falha no login: Credenciais inválidas');
         }
