@@ -1,70 +1,108 @@
-import React, { useState } from 'react';
-import { Button, Modal, Input, Divider, List, message } from 'antd';
-import MenuPrincipal from './Menu';
-import App from './App';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './Documentos.css';
+import axios from 'axios';
+import { Card, Row, Col, Spin, Alert } from 'antd';
+import LayoutWrapper from './LayoutWrapper';
 
+const cardStyle = {
+  borderRadius: 8,
+  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+  margin: 8,
+  height: '200px',
+  display: 'flex',
+  flexDirection: 'column',
+};
 
-const { TextArea } = Input;
+const contentStyle = {
+  flex: 1,
+  overflow: 'hidden',
+  display: '-webkit-box',
+  WebkitBoxOrient: 'vertical',
+  WebkitLineClamp: 2,
+  textOverflow: 'ellipsis',
+  whiteSpace: 'normal',
+};
 
-const data = [
-  { id: 1, text: 'Documento 1', dateTime: 'Data/Hora', user: 'Usuario' },
-  { id: 2, text: 'Documento 2', dateTime: 'Data/Hora', user: 'Usuario' },
-  { id: 3, text: 'Documento 3', dateTime: 'Data/Hora', user: 'Usuario' },
-  { id: 4, text: 'Documento 4', dateTime: 'Data/Hora', user: 'Usuario' },
-  { id: 5, text: 'Documento 5', dateTime: 'Data/Hora', user: 'Usuario' },
-];
+const footerStyle = {
+  paddingTop: '8px',
+  borderTop: '1px solid #ddd',
+  fontSize: '14px',
+  textAlign: 'center',
+  backgroundColor: '#fff',
+};
 
 const Documentos = () => {
-  const [plainText, setPlainText] = useState('');
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [documents, setDocuments] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
+  useEffect(() => {
+    const fetchDocuments = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await axios.get('http://localhost:5000/api/documents', {
+          headers: {
+            'x-auth-token': token,
+          },
+        });
+        setDocuments(response.data);
+        setLoading(false);
+      } catch (err) {
+        setError('Erro ao buscar documentos. Tente novamente.');
+        setLoading(false);
+      }
+    };
 
-  const handleOk = () => {
-    setIsModalOpen(false);
-  };
+    fetchDocuments();
+  }, []);
 
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
-
-  const handleDocumentClick = (id) => {
+  const handleCardClick = (id) => {
     navigate(`/documento/${id}`);
   };
 
+  if (loading) {
+    return (
+      <LayoutWrapper>
+        <Spin tip="Carregando documentos..." />
+      </LayoutWrapper>
+    );
+  }
+
+  if (error) {
+    return (
+      <LayoutWrapper>
+        <Alert message="Erro" description={error} type="error" />
+      </LayoutWrapper>
+    );
+  }
+
   return (
-    <>
-      <MenuPrincipal />
-      <App/>
-      <Divider orientation="left">DOCUMENTOS</Divider>
-      <List
-        size="large"
-        header={<div>DOCUMENTOS</div>}
-        footer={<div>FIM DOCUMENTOS</div>}
-        bordered
-        dataSource={data}
-        renderItem={(item) => (
-          <List.Item
-          className="list-item"
-            onClick={() => handleDocumentClick(item.id)}
-            actions={[
-              <Button type="primary">
-                Verificar Assinatura
-              </Button>,
-            ]}
-          >
-            {item.text} - {item.dateTime} - {item.user}
-          </List.Item>
-        )}
-      />
-    </>
+    <LayoutWrapper>
+      <Row gutter={24}>
+        {documents.map((item) => (
+          <Col span={8} key={item._id}>
+            <Card
+              title={item.title}
+              bordered={true}
+              style={cardStyle}
+              onClick={() => handleCardClick(item._id)}
+              hoverable
+            >
+              <div style={contentStyle}>
+                <p>{item.content}</p>
+              </div>
+              <div style={footerStyle}>
+                <div>
+                  Criado por: {item.createdBy ? item.createdBy.username : 'Desconhecido'}
+                </div>
+              </div>
+            </Card>
+          </Col>
+        ))}
+      </Row>
+    </LayoutWrapper>
   );
 };
 
 export default Documentos;
-

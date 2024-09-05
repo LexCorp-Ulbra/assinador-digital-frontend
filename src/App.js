@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import forge from 'node-forge';
 import { Button, Select, Input, message, Modal, Typography, List, Row, Col, Divider } from 'antd';
 import './App.css';
-import MenuPrincipal from './Menu';
 
 
 function App() {
