@@ -1,5 +1,5 @@
 import React from "react";
-import { Layout, Menu, Button } from "antd";
+import { Layout, Menu, Button, Divider } from "antd";
 import { FileOutlined, PlusOutlined, LogoutOutlined } from "@ant-design/icons";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -9,7 +9,6 @@ const headerStyle = {
   textAlign: "center",
   color: "#fff",
   height: 64,
-  paddingInline: 48,
   lineHeight: "64px",
   display: "flex",
   justifyContent: "space-between",
@@ -19,7 +18,6 @@ const headerStyle = {
 };
 
 const siderStyle = {
-  color: "#fff",
   backgroundColor: "#0095f6",
 };
 
@@ -48,6 +46,16 @@ const buttonStyle = {
   fontWeight: "bold",
 };
 
+const menuItemStyle = {
+  fontSize: "16px",
+  padding: "16px 24px",
+};
+
+const iconStyle = {
+  fontSize: "18px",
+  color: "#fff",
+};
+
 const LayoutWrapper = ({ children }) => {
   const navigate = useNavigate();
 
@@ -59,15 +67,17 @@ const LayoutWrapper = ({ children }) => {
   return (
     <Layout style={layoutStyle}>
       <Sider style={siderStyle} width={256}>
-        <Menu theme="dark" mode="inline">
-          <Menu.Item key="1" icon={<FileOutlined />}>
-            <Link to="/documentos">Documentos</Link>
+        <Menu theme="dark" mode="inline" style={{ border: "none" }}>
+          <Menu.Item key="1" icon={<FileOutlined style={iconStyle} />} style={menuItemStyle}>
+            <Link to="/documentos" style={{ color: "#fff" }}>Documentos</Link>
           </Menu.Item>
-          <Menu.Item key="2" icon={<FileOutlined />}>
-            <Link to="/documentoUsuario">Meus Documentos</Link>
+          <Divider style={{ margin: 0, backgroundColor: "#fff" }} />
+          <Menu.Item key="2" icon={<FileOutlined style={iconStyle} />} style={menuItemStyle}>
+            <Link to="/documentoUsuario" style={{ color: "#fff" }}>Meus Documentos</Link>
           </Menu.Item>
-          <Menu.Item key="3" icon={<PlusOutlined />}>
-            <Link to="/novoDocumento">Novo Documento</Link>
+          <Divider style={{ margin: 0, backgroundColor: "#fff" }} />
+          <Menu.Item key="3" icon={<PlusOutlined style={iconStyle} />} style={menuItemStyle}>
+            <Link to="/novoDocumento" style={{ color: "#fff" }}>Novo Documento</Link>
           </Menu.Item>
         </Menu>
       </Sider>
