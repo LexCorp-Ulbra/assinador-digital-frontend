@@ -74,6 +74,10 @@ const Documentos = () => {
     return title.length > maxLength ? `${title.substring(0, maxLength)}...` : title;
   };
 
+  const truncateContent = (content, maxLength = 20) => {
+    return content.length > maxLength ? `${content.substring(0, maxLength)}...` : content;
+  };
+
   const getStatusTag = (signature) => {
     return signature ? (
       <Tag color="green" style={tagStyle}>Assinado</Tag>
@@ -115,7 +119,7 @@ const Documentos = () => {
             >
               {getStatusTag(item.signature)}
               <div style={contentStyle}>
-                <Text>{item.content}</Text>
+                <Text>{truncateContent(item.content)}</Text>
               </div>
               <div style={footerStyle}>
                 <div>

@@ -1,22 +1,12 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
-import { Spin, Alert, Collapse, Divider, Button, message } from "antd";
+import { Spin, Alert, Collapse, Divider, Button, message, Typography, Card } from "antd";
 import { LockOutlined, EditOutlined } from "@ant-design/icons";
 import LayoutWrapper from "./LayoutWrapper";
 
 const { Panel } = Collapse;
-
-const panelHeaderStyle = {
-  fontSize: "16px",
-  fontWeight: "bold",
-};
-
-const textStyle = {
-  marginBottom: "16px",
-  wordBreak: "break-word",
-  whiteSpace: "pre-wrap",
-};
+const { Title } = Typography;
 
 const containerStyle = {
   padding: "24px",
@@ -27,15 +17,13 @@ const containerStyle = {
   maxWidth: "800px",
 };
 
-const backButtonStyle = {
+const textStyle = {
   marginBottom: "16px",
+  wordBreak: "break-word",
+  whiteSpace: "pre-wrap",
 };
 
-const validateButtonStyle = {
-  marginTop: "16px",
-};
-
-const signButtonStyle = {
+const buttonStyle = {
   marginTop: "16px",
 };
 
@@ -159,44 +147,24 @@ const DocumentoDetalhes = () => {
 
   return (
     <LayoutWrapper>
-      <div style={containerStyle}>
+      <Card style={containerStyle}>
         <Button
           type="primary"
           onClick={() => navigate(-1)}
-          style={backButtonStyle}
+          style={{ marginBottom: '16px' }}
         >
           Voltar
         </Button>
-        <p style={textStyle}>
-          <strong>Título:</strong> {document.title}
-        </p>
-        <p style={textStyle}>
-          <strong>Assinado por:</strong>{" "}
-          {document.signedBy ? document.signedBy.username : "Não assinado"}
-        </p>
-        <p style={textStyle}>
-          <strong>Chave pública do assinante:</strong>{" "}
-          {document.signedBy ? document.signedBy.publicKey : "Não assinado"}
-        </p>
-        <p style={textStyle}>
-          <strong>Assinatura:</strong>{" "}
-          {document.signature ? document.signature : "Nenhuma assinatura"}
-        </p>
-        <p style={textStyle}>
-          <strong>Criado por:</strong>{" "}
-          {document.createdBy ? document.createdBy.username : "Desconhecido"}
-        </p>
-        <p style={textStyle}>
-          <strong>Criado em:</strong>{" "}
-          {new Date(document.createdAt).toLocaleDateString()}
-        </p>
+        <Title level={4}>Detalhes do Documento</Title>
+        <p style={textStyle}><strong>Título:</strong> {document.title}</p>
+        <p style={textStyle}><strong>Assinado por:</strong> {document.signedBy ? document.signedBy.username : "Não assinado"}</p>
+        <p style={textStyle}><strong>Chave pública do assinante:</strong> {document.signedBy ? document.signedBy.publicKey : "Não assinado"}</p>
+        <p style={textStyle}><strong>Assinatura:</strong> {document.signature ? document.signature : "Nenhuma assinatura"}</p>
+        <p style={textStyle}><strong>Criado por:</strong> {document.createdBy ? document.createdBy.username : "Desconhecido"}</p>
+        <p style={textStyle}><strong>Criado em:</strong> {new Date(document.createdAt).toLocaleDateString()}</p>
         <Divider />
         <Collapse defaultActiveKey={["1"]} ghost>
-          <Panel
-            header="Conteúdo do Documento"
-            key="1"
-            style={panelHeaderStyle}
-          >
+          <Panel header="Conteúdo do Documento" key="1">
             <p>{document.content}</p>
           </Panel>
         </Collapse>
@@ -205,7 +173,7 @@ const DocumentoDetalhes = () => {
             type="primary"
             icon={<LockOutlined />}
             onClick={handleValidateSignature}
-            style={validateButtonStyle}
+            style={buttonStyle}
           >
             Validar Assinatura
           </Button>
@@ -215,12 +183,12 @@ const DocumentoDetalhes = () => {
             type="primary"
             icon={<EditOutlined />}
             onClick={handleSignDocument}
-            style={signButtonStyle}
+            style={buttonStyle}
           >
             Assinar Documento
           </Button>
         )}
-      </div>
+      </Card>
     </LayoutWrapper>
   );
 };
