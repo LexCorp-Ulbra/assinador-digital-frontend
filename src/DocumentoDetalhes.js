@@ -1,7 +1,16 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
-import { Spin, Alert, Collapse, Divider, Button, message, Typography, Card } from "antd";
+import {
+  Spin,
+  Alert,
+  Collapse,
+  Divider,
+  Button,
+  message,
+  Typography,
+  Card,
+} from "antd";
 import { LockOutlined, EditOutlined } from "@ant-design/icons";
 import LayoutWrapper from "./LayoutWrapper";
 
@@ -48,6 +57,7 @@ const DocumentoDetalhes = () => {
           },
         }
       );
+      console.log(response.data);
       setDocument(response.data);
       setIsDocumentSigned(!!response.data.signature);
 
@@ -151,17 +161,40 @@ const DocumentoDetalhes = () => {
         <Button
           type="primary"
           onClick={() => navigate(-1)}
-          style={{ marginBottom: '16px' }}
+          style={{ marginBottom: "16px" }}
         >
           Voltar
         </Button>
         <Title level={4}>Detalhes do Documento</Title>
-        <p style={textStyle}><strong>Título:</strong> {document.title}</p>
-        <p style={textStyle}><strong>Assinado por:</strong> {document.signedBy ? document.signedBy.username : "Não assinado"}</p>
-        <p style={textStyle}><strong>Chave pública do assinante:</strong> {document.signedBy ? document.signedBy.publicKey : "Não assinado"}</p>
-        <p style={textStyle}><strong>Assinatura:</strong> {document.signature ? document.signature : "Nenhuma assinatura"}</p>
-        <p style={textStyle}><strong>Criado por:</strong> {document.createdBy ? document.createdBy.username : "Desconhecido"}</p>
-        <p style={textStyle}><strong>Criado em:</strong> {new Date(document.createdAt).toLocaleDateString()}</p>
+        <p style={textStyle}>
+          <strong>Título:</strong> {document.title}
+        </p>
+        <p style={textStyle}>
+          <strong>Assinado por:</strong>{" "}
+          {document.signedBy ? document.signedBy.username : "Não assinado"}
+        </p>
+        <p style={textStyle}>
+          <strong>Chave pública do assinante:</strong>{" "}
+          {document.signedBy ? document.signedBy.publicKey : "Não assinado"}
+        </p>
+        <p style={textStyle}>
+          <strong>Assinatura:</strong>{" "}
+          {document.signature ? document.signature : "Nenhuma assinatura"}
+        </p>
+        <p style={textStyle}>
+          <strong>Criado por:</strong>{" "}
+          {document.createdBy ? document.createdBy.username : "Desconhecido"}
+        </p>
+        <p style={textStyle}>
+          <strong>Criado em:</strong>{" "}
+          {new Date(document.createdAt).toLocaleDateString()}
+        </p>
+        {document.signedAt && (
+          <p style={textStyle}>
+            <strong>Assinado em:</strong>{" "}
+            {new Date(document.signedAt).toLocaleDateString()}
+          </p>
+        )}
         <Divider />
         <Collapse defaultActiveKey={["1"]} ghost>
           <Panel header="Conteúdo do Documento" key="1">

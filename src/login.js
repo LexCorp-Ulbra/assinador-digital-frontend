@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { Form, Input, Button, message, Divider, Card, Typography } from "antd";
+import { Form, Input, Button, message, Divider, Typography } from "antd";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import "./index.css";
 
-const { Title, Text } = Typography;
+const { Title } = Typography;
 
 const Login = () => {
   const [loading, setLoading] = useState(false);
@@ -39,69 +40,105 @@ const Login = () => {
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "100vh",
-        backgroundColor: "#f0f2f5",
-      }}
-    >
-      <Card style={{ maxWidth: "400px", width: "100%", padding: "40px" }}>
-        <Title level={2} style={{ textAlign: "center", marginBottom: "24px" }}>
-          Assinador Virtual
-        </Title>
-        <Text style={{ display: "block", textAlign: "center", marginBottom: "24px" }}>
-          Faça login para continuar.
-        </Text>
-        <Form
-          name="login"
-          initialValues={{ remember: true }}
-          onFinish={onFinish}
-          onFinishFailed={onFinishFailed}
-          layout="vertical"
+    <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
+      <div style={{ display: "flex", flex: 1 }}>
+        <div
+          style={{
+            flex: 1,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            padding: "0 40px",
+            backgroundColor: "#fff",
+          }}
         >
-          <Form.Item
-            name="email"
-            label="Email"
-            rules={[
-              { required: true, message: "Por favor, insira seu email!" },
-              { type: "email", message: "Por favor, insira um email válido!" },
-            ]}
-          >
-            <Input placeholder="Insira seu email" />
-          </Form.Item>
-
-          <Form.Item
-            name="password"
-            label="Senha"
-            rules={[{ required: true, message: "Por favor, insira sua senha!" }]}
-          >
-            <Input.Password placeholder="Insira sua senha" />
-          </Form.Item>
-
-          <Form.Item>
-            <Button
-              type="primary"
-              htmlType="submit"
-              style={{
-                width: "100%",
-                backgroundColor: "#0095f6",
-                borderColor: "#0095f6",
-              }}
-              loading={loading}
+          <div style={{ maxWidth: "400px", width: "100%" }}>
+            <Title
+              level={2}
+              style={{ textAlign: "left", marginBottom: "24px" }}
             >
-              Entrar
-            </Button>
-          </Form.Item>
-        </Form>
-        <Divider />
-        <div style={{ textAlign: "center" }}>
-          <span>Não tem uma conta? </span>
-          <a href="/registro">Cadastre-se</a>
+              Faça login no{" "}
+              <span
+                style={{
+                  fontFamily: "'Poppins', sans-serif",
+                  fontSize: "24px",
+                  fontWeight: "bold",
+                  color: "#0095f6",
+                }}
+              >
+                SigNier
+              </span>
+            </Title>
+            <Form
+              name="login"
+              initialValues={{ remember: true }}
+              onFinish={onFinish}
+              onFinishFailed={onFinishFailed}
+              layout="vertical"
+            >
+              <Form.Item
+                name="email"
+                label="E-mail"
+                rules={[
+                  {
+                    required: true,
+                    message: "Por favor, insira seu e-mail!",
+                  },
+                  {
+                    type: "email",
+                    message: "Por favor, insira um e-mail válido!",
+                  },
+                ]}
+              >
+                <Input placeholder="example@email.com" />
+              </Form.Item>
+
+              <Form.Item
+                name="password"
+                label="Senha"
+                rules={[
+                  {
+                    required: true,
+                    message: "Por favor, insira sua senha!",
+                  },
+                ]}
+              >
+                <Input.Password placeholder="Insira sua senha" />
+              </Form.Item>
+
+              <Form.Item>
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  style={{
+                    width: "100%",
+                    backgroundColor: "#0095f6",
+                    borderColor: "#0095f6",
+                  }}
+                  loading={loading}
+                >
+                  Login
+                </Button>
+              </Form.Item>
+            </Form>
+
+            <Divider />
+
+            <div style={{ textAlign: "center" }}>
+              <span>Não tem uma conta? </span>
+              <a href="/registro">Cadastro</a>
+            </div>
+          </div>
         </div>
-      </Card>
+        <div
+          style={{
+            flex: 1,
+            backgroundImage: `url('/validade-jurídica.jpg')`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
+        />
+      </div>
     </div>
   );
 };
