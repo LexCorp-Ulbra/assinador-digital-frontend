@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { Card, Row, Col, Spin, Alert } from 'antd';
+import { Card, Row, Col, Spin, Alert, Tag, Typography } from 'antd';
 import LayoutWrapper from './LayoutWrapper';
+
+const { Text } = Typography;
 
 const cardStyle = {
   borderRadius: 8,
   boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-  margin: 8,
-  height: '200px',
+  margin: '8px 8px 16px',
+  height: '160px',
   display: 'flex',
   flexDirection: 'column',
+  position: 'relative',
 };
 
 const contentStyle = {
@@ -25,10 +28,16 @@ const contentStyle = {
 
 const footerStyle = {
   paddingTop: '8px',
-  borderTop: '1px solid #ddd',
+  marginTop: '8px',
   fontSize: '14px',
   textAlign: 'center',
-  backgroundColor: '#fff',
+  borderTop: '1px solid #ddd',
+};
+
+const tagStyle = {
+  position: 'absolute',
+  top: '10px',
+  right: '10px',
 };
 
 const Documentos = () => {
@@ -61,6 +70,18 @@ const Documentos = () => {
     navigate(`/documento/${id}`);
   };
 
+  const truncateTitle = (title, maxLength = 30) => {
+    return title.length > maxLength ? `${title.substring(0, maxLength)}...` : title;
+  };
+
+  const getStatusTag = (signature) => {
+    return signature ? (
+      <Tag color="green" style={tagStyle}>Assinado</Tag>
+    ) : (
+      <Tag color="red" style={tagStyle}>Não Assinado</Tag>
+    );
+  };
+
   if (loading) {
     return (
       <LayoutWrapper>
@@ -79,18 +100,22 @@ const Documentos = () => {
 
   return (
     <LayoutWrapper>
+      <Typography.Title level={2} style={{ textAlign: 'center', marginBottom: '24px' }}>
+        Documentos
+      </Typography.Title>
       <Row gutter={24}>
         {documents.map((item) => (
           <Col span={8} key={item._id}>
             <Card
-              title={item.title}
+              title={truncateTitle(item.title)}
               bordered={true}
               style={cardStyle}
               onClick={() => handleCardClick(item._id)}
               hoverable
             >
+              {getStatusTag(item.signature)}
               <div style={contentStyle}>
-                <p>{item.content}</p>
+                <Text>{item.content}</Text>
               </div>
               <div style={footerStyle}>
                 <div>
