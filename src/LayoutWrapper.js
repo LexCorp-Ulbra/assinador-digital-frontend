@@ -84,7 +84,7 @@ const LayoutWrapper = ({ children }) => {
       <Layout>
         <Header style={headerStyle}>
           <div style={{ fontSize: "18px", fontWeight: "bold" }}>
-            Assinador Digital
+            SigNier
           </div>
           <Button
             type="primary"
@@ -96,7 +96,7 @@ const LayoutWrapper = ({ children }) => {
           </Button>
         </Header>
         <Content style={contentStyle}>{children}</Content>
-        <Footer style={footerStyle}>Assinador Virtual ©2024</Footer>
+        <Footer style={footerStyle}>SigNier ©2024</Footer>
       </Layout>
     </Layout>
   );
