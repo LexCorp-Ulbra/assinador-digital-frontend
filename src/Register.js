@@ -1,7 +1,9 @@
 import React from "react";
-import { Form, Input, Button, message } from "antd";
+import { Form, Input, Button, message, Card, Typography } from "antd";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+
+const { Title, Text } = Typography;
 
 const Register = () => {
   const navigate = useNavigate();
@@ -36,65 +38,81 @@ const Register = () => {
   return (
     <div
       style={{
-        maxWidth: "400px",
-        margin: "0 auto",
-        padding: "50px",
-        textAlign: "center",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
+        backgroundColor: "#f0f2f5",
       }}
     >
-      <h1 style={{ fontFamily: "cursive", marginBottom: "20px" }}>Cadastro</h1>
-      <Form
-        name="register"
-        initialValues={{ remember: true }}
-        onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
-        style={{ textAlign: "left" }}
-      >
-        <Form.Item
-          name="username"
-          rules={[
-            {
-              required: true,
-              message: "Por favor, insira seu nome de usuário!",
-            },
-          ]}
+      <Card style={{ maxWidth: "400px", width: "100%", padding: "40px" }}>
+        <Title level={2} style={{ textAlign: "center", marginBottom: "24px" }}>
+          Cadastro
+        </Title>
+        <Text style={{ display: "block", textAlign: "center", marginBottom: "24px" }}>
+          Crie uma nova conta preenchendo os dados abaixo.
+        </Text>
+        <Form
+          name="register"
+          initialValues={{ remember: true }}
+          onFinish={onFinish}
+          onFinishFailed={onFinishFailed}
+          layout="vertical"
         >
-          <Input placeholder="Nome de usuário" />
-        </Form.Item>
-
-        <Form.Item
-          name="email"
-          rules={[{ required: true, message: "Por favor, insira seu email!" }]}
-        >
-          <Input placeholder="Email" />
-        </Form.Item>
-
-        <Form.Item
-          name="password"
-          rules={[{ required: true, message: "Por favor, insira sua senha!" }]}
-        >
-          <Input.Password placeholder="Senha" />
-        </Form.Item>
-
-        <Form.Item>
-          <Button
-            type="primary"
-            htmlType="submit"
-            style={{
-              width: "100%",
-              backgroundColor: "#4096ff",
-              borderColor: "#4096ff",
-            }}
+          <Form.Item
+            name="username"
+            label="Nome de usuário"
+            rules={[
+              {
+                required: true,
+                message: "Por favor, insira seu nome de usuário!",
+              },
+            ]}
           >
-            Cadastrar
-          </Button>
-        </Form.Item>
+            <Input placeholder="Nome de usuário" />
+          </Form.Item>
 
-        <Form.Item>
-          <span>Já tem uma conta? </span>
-          <a href="/">Entrar</a>
-        </Form.Item>
-      </Form>
+          <Form.Item
+            name="email"
+            label="Email"
+            rules={[
+              { required: true, message: "Por favor, insira seu email!" },
+              { type: "email", message: "Por favor, insira um email válido!" },
+            ]}
+          >
+            <Input placeholder="Insira seu email" />
+          </Form.Item>
+
+          <Form.Item
+            name="password"
+            label="Senha"
+            rules={[{ required: true, message: "Por favor, insira sua senha!" }]}
+          >
+            <Input.Password placeholder="Insira sua senha" />
+          </Form.Item>
+
+          <Form.Item>
+            <Button
+              type="primary"
+              htmlType="submit"
+              style={{
+                width: "100%",
+                backgroundColor: "#4096ff",
+                borderColor: "#4096ff",
+              }}
+            >
+              Cadastrar
+            </Button>
+          </Form.Item>
+
+          <Form.Item>
+            <div style={{ textAlign: "center" }}>
+              <span>Já tem uma conta? </span>
+              <a href="/">Entrar</a>
+            </div>
+          </Form.Item>
+        </Form>
+      </Card>
     </div>
   );
 };

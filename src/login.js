@@ -1,7 +1,9 @@
 import React, { useState } from "react";
-import { Form, Input, Button, message, Divider } from "antd";
+import { Form, Input, Button, message, Divider, Card, Typography } from "antd";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+
+const { Title, Text } = Typography;
 
 const Login = () => {
   const [loading, setLoading] = useState(false);
@@ -20,7 +22,7 @@ const Login = () => {
       localStorage.setItem("token", response.data.token);
       message.success("Login realizado com sucesso!");
       setLoading(false);
-      navigate("/documentos")
+      navigate("/documentos");
     } catch (error) {
       setLoading(false);
       if (error.response && error.response.data.msg) {
@@ -39,64 +41,72 @@ const Login = () => {
   return (
     <div
       style={{
-        maxWidth: "400px",
-        margin: "0 auto",
-        padding: "50px",
-        textAlign: "center",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
+        backgroundColor: "#f0f2f5",
       }}
     >
-      <h1 style={{ fontFamily: "cursive", marginBottom: "20px" }}>
-        Assinador Virtual
-      </h1>
-      <Form
-        name="login"
-        initialValues={{ remember: true }}
-        onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
-        style={{ textAlign: "left" }}
-      >
-        <Form.Item
-          name="email"
-          rules={[
-            { required: true, message: "Por favor, insira seu email!" },
-            { type: "email", message: "Por favor, insira um email válido!" },
-          ]}
+      <Card style={{ maxWidth: "400px", width: "100%", padding: "40px" }}>
+        <Title level={2} style={{ textAlign: "center", marginBottom: "24px" }}>
+          Assinador Virtual
+        </Title>
+        <Text style={{ display: "block", textAlign: "center", marginBottom: "24px" }}>
+          Faça login para continuar.
+        </Text>
+        <Form
+          name="login"
+          initialValues={{ remember: true }}
+          onFinish={onFinish}
+          onFinishFailed={onFinishFailed}
+          layout="vertical"
         >
-          <Input placeholder="Email" />
-        </Form.Item>
-
-        <Form.Item
-          name="password"
-          rules={[{ required: true, message: "Por favor, insira sua senha!" }]}
-        >
-          <Input.Password placeholder="Senha" />
-        </Form.Item>
-
-        <Form.Item>
-          <Button
-            type="primary"
-            htmlType="submit"
-            style={{
-              width: "100%",
-              backgroundColor: "#0095f6",
-              borderColor: "#0095f6",
-            }}
-            loading={loading}
+          <Form.Item
+            name="email"
+            label="Email"
+            rules={[
+              { required: true, message: "Por favor, insira seu email!" },
+              { type: "email", message: "Por favor, insira um email válido!" },
+            ]}
           >
-            Entrar
-          </Button>
-        </Form.Item>
-        <Form.Item>
-          <a href="#forgot-password" style={{ float: "left" }}>
-            Esqueceu a senha?
-          </a>
-        </Form.Item>
-      </Form>
-      <Divider />
-      <div>
-        <span>Não tem uma conta? </span>
-        <a href="/registro">Cadastre-se</a>
-      </div>
+            <Input placeholder="Insira seu email" />
+          </Form.Item>
+
+          <Form.Item
+            name="password"
+            label="Senha"
+            rules={[{ required: true, message: "Por favor, insira sua senha!" }]}
+          >
+            <Input.Password placeholder="Insira sua senha" />
+          </Form.Item>
+
+          <Form.Item>
+            <Button
+              type="primary"
+              htmlType="submit"
+              style={{
+                width: "100%",
+                backgroundColor: "#0095f6",
+                borderColor: "#0095f6",
+              }}
+              loading={loading}
+            >
+              Entrar
+            </Button>
+          </Form.Item>
+          <Form.Item>
+            <a href="#forgot-password" style={{ float: "left" }}>
+              Esqueceu a senha?
+            </a>
+          </Form.Item>
+        </Form>
+        <Divider />
+        <div style={{ textAlign: "center" }}>
+          <span>Não tem uma conta? </span>
+          <a href="/registro">Cadastre-se</a>
+        </div>
+      </Card>
     </div>
   );
 };
