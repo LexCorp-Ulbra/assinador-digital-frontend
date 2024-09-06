@@ -1,43 +1,43 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { Card, Row, Col, Spin, Alert, Tag, Typography } from 'antd';
-import LayoutWrapper from './LayoutWrapper';
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { Card, Row, Col, Spin, Alert, Tag, Typography, Empty } from "antd";
+import LayoutWrapper from "./LayoutWrapper";
 
 const { Text } = Typography;
 
 const cardStyle = {
   borderRadius: 8,
-  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-  margin: '8px 8px 16px',
-  height: '160px',
-  display: 'flex',
-  flexDirection: 'column',
-  position: 'relative',
+  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+  margin: "8px 8px 16px",
+  height: "160px",
+  display: "flex",
+  flexDirection: "column",
+  position: "relative",
 };
 
 const contentStyle = {
   flex: 1,
-  overflow: 'hidden',
-  display: '-webkit-box',
-  WebkitBoxOrient: 'vertical',
+  overflow: "hidden",
+  display: "-webkit-box",
+  WebkitBoxOrient: "vertical",
   WebkitLineClamp: 2,
-  textOverflow: 'ellipsis',
-  whiteSpace: 'normal',
+  textOverflow: "ellipsis",
+  whiteSpace: "normal",
 };
 
 const footerStyle = {
-  paddingTop: '8px',
-  marginTop: '8px',
-  fontSize: '14px',
-  textAlign: 'center',
-  borderTop: '1px solid #ddd',
+  paddingTop: "8px",
+  marginTop: "8px",
+  fontSize: "14px",
+  textAlign: "center",
+  borderTop: "1px solid #ddd",
 };
 
 const tagStyle = {
-  position: 'absolute',
-  top: '10px',
-  right: '10px',
+  position: "absolute",
+  top: "10px",
+  right: "10px",
 };
 
 const Documentos = () => {
@@ -49,16 +49,19 @@ const Documentos = () => {
   useEffect(() => {
     const fetchDocuments = async () => {
       try {
-        const token = localStorage.getItem('token');
-        const response = await axios.get('http://localhost:5000/api/documents', {
-          headers: {
-            'x-auth-token': token,
-          },
-        });
+        const token = localStorage.getItem("token");
+        const response = await axios.get(
+          "http://localhost:5000/api/documents",
+          {
+            headers: {
+              "x-auth-token": token,
+            },
+          }
+        );
         setDocuments(response.data);
         setLoading(false);
       } catch (err) {
-        setError('Erro ao buscar documentos. Tente novamente.');
+        setError("Erro ao buscar documentos. Tente novamente.");
         setLoading(false);
       }
     };
@@ -71,18 +74,26 @@ const Documentos = () => {
   };
 
   const truncateTitle = (title, maxLength = 30) => {
-    return title.length > maxLength ? `${title.substring(0, maxLength)}...` : title;
+    return title.length > maxLength
+      ? `${title.substring(0, maxLength)}...`
+      : title;
   };
 
   const truncateContent = (content, maxLength = 20) => {
-    return content.length > maxLength ? `${content.substring(0, maxLength)}...` : content;
+    return content.length > maxLength
+      ? `${content.substring(0, maxLength)}...`
+      : content;
   };
 
   const getStatusTag = (signature) => {
     return signature ? (
-      <Tag color="green" style={tagStyle}>Assinado</Tag>
+      <Tag color="green" style={tagStyle}>
+        Assinado
+      </Tag>
     ) : (
-      <Tag color="red" style={tagStyle}>Não Assinado</Tag>
+      <Tag color="red" style={tagStyle}>
+        Não Assinado
+      </Tag>
     );
   };
 
@@ -102,9 +113,23 @@ const Documentos = () => {
     );
   }
 
+  if (documents.length === 0) {
+    return (
+      <LayoutWrapper>
+        <Typography.Title level={4} style={{ textAlign: "center" }}>
+          Nenhum Documento Encontrado
+        </Typography.Title>
+        <Empty description="Não há documentos disponíveis no momento." />
+      </LayoutWrapper>
+    );
+  }
+
   return (
     <LayoutWrapper>
-      <Typography.Title level={2} style={{ textAlign: 'center', marginBottom: '24px' }}>
+      <Typography.Title
+        level={2}
+        style={{ textAlign: "center", marginBottom: "24px" }}
+      >
         Documentos
       </Typography.Title>
       <Row gutter={24}>
@@ -123,7 +148,8 @@ const Documentos = () => {
               </div>
               <div style={footerStyle}>
                 <div>
-                  Criado por: {item.createdBy ? item.createdBy.username : 'Desconhecido'}
+                  Criado por:{" "}
+                  {item.createdBy ? item.createdBy.username : "Desconhecido"}
                 </div>
               </div>
             </Card>

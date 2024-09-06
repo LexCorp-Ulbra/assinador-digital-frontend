@@ -11,26 +11,41 @@ const headerStyle = {
   height: 64,
   paddingInline: 48,
   lineHeight: "64px",
-  backgroundColor: "#4096ff",
   display: "flex",
   justifyContent: "space-between",
   alignItems: "center",
   padding: "0 24px",
+  backgroundColor: "#0095f6",
 };
 
 const siderStyle = {
   color: "#fff",
-  backgroundColor: "#1677ff",
+  backgroundColor: "#0095f6",
 };
 
 const footerStyle = {
   textAlign: "center",
   color: "#fff",
-  backgroundColor: "#4096ff",
+  backgroundColor: "#0095f6",
+  padding: "16px",
 };
 
 const layoutStyle = {
   minHeight: "100vh",
+};
+
+const contentStyle = {
+  padding: "24px",
+  margin: 0,
+  minHeight: 280,
+  backgroundColor: "#f0f2f5",
+};
+
+const buttonStyle = {
+  backgroundColor: "#ff4d4f",
+  borderColor: "#ff4d4f",
+  borderRadius: "4px",
+  fontWeight: "bold",
 };
 
 const LayoutWrapper = ({ children }) => {
@@ -43,7 +58,7 @@ const LayoutWrapper = ({ children }) => {
 
   return (
     <Layout style={layoutStyle}>
-      <Sider style={siderStyle}>
+      <Sider style={siderStyle} width={256}>
         <Menu theme="dark" mode="inline">
           <Menu.Item key="1" icon={<FileOutlined />}>
             <Link to="/documentos">Documentos</Link>
@@ -58,26 +73,19 @@ const LayoutWrapper = ({ children }) => {
       </Sider>
       <Layout>
         <Header style={headerStyle}>
-          <div>Assinador Digital</div>
+          <div style={{ fontSize: "18px", fontWeight: "bold" }}>
+            Assinador Digital
+          </div>
           <Button
             type="primary"
             icon={<LogoutOutlined />}
             onClick={handleLogout}
-            style={{ backgroundColor: "#ff4d4f", borderColor: "#ff4d4f" }}
+            style={buttonStyle}
           >
             Sair
           </Button>
         </Header>
-        <Content
-          style={{
-            textAlign: "left",
-            padding: "24px",
-            color: "#333",
-            backgroundColor: "#fff",
-          }}
-        >
-          {children}
-        </Content>
+        <Content style={contentStyle}>{children}</Content>
         <Footer style={footerStyle}>Assinador Virtual ©2024</Footer>
       </Layout>
     </Layout>
