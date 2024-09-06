@@ -95,11 +95,6 @@ const Login = () => {
               Entrar
             </Button>
           </Form.Item>
-          <Form.Item>
-            <a href="#forgot-password" style={{ float: "left" }}>
-              Esqueceu a senha?
-            </a>
-          </Form.Item>
         </Form>
         <Divider />
         <div style={{ textAlign: "center" }}>
