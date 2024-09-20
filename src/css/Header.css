@@ -1,0 +1,29 @@
+.layout-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 24px;
+    height: 64px;
+    background-color: #001529;
+    color: #fff;
+  }
+  
+  .header-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: #fff;
+    margin-left: 30px;
+  }
+  
+  
+  .logout-button {
+    background-color: #ff4d4f;
+    border-color: #ff4d4f;
+    font-weight: bold;
+    border-radius: 4px;
+  }
+  
+  .logout-button:hover {
+    background-color: #ff7875;
+  }
+  

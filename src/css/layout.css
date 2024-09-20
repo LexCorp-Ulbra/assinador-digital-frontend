@@ -1,0 +1,21 @@
+body {
+    font-family: "Roboto", sans-serif;
+    background-color: #f0f2f5;
+    margin: 0;
+    padding: 0;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: "Roboto", sans-serif;
+  }
+  
+  .ant-layout {
+    min-height: 100vh;
+  }
+  
+  .ant-layout-content {
+    padding: 24px;
+    margin: 0;
+    background-color: #fff;
+  }
+  

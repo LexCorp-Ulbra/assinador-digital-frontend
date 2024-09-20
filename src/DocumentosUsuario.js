@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Table, Spin, Alert, Button, Tag } from "antd";
 import { Link } from "react-router-dom";
-import LayoutWrapper from "./LayoutWrapper";
+import LayoutWrapper from "./Components/LayoutWrapper";
 
 const DocumentosUsuario = () => {
   const [documents, setDocuments] = useState([]);

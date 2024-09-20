@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Form, Input, Button, Switch, message, Layout, Typography, Card } from 'antd';
-import LayoutWrapper from './LayoutWrapper';
+import LayoutWrapper from '../Components/LayoutWrapper';
 
 const { Content } = Layout;
 const { Title, Text } = Typography;
