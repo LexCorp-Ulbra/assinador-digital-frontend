@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Form, Input, Button, message, Divider, Typography } from "antd";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import "./index.css";
+import "../index";
 
 const { Title } = Typography;
 

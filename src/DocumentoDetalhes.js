@@ -12,7 +12,7 @@ import {
   Card,
 } from "antd";
 import { LockOutlined, EditOutlined } from "@ant-design/icons";
-import LayoutWrapper from "./LayoutWrapper";
+import LayoutWrapper from "./Components/LayoutWrapper";
 
 const { Panel } = Collapse;
 const { Title } = Typography;

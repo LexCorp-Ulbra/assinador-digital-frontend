@@ -1,0 +1,63 @@
+.sider-header {
+    background-color: #001529;
+    text-align: center;
+}
+
+.sider-footer {
+    position: absolute;
+    bottom: 20px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding-left: 20px;
+    padding-top: 10px;
+    border-top: 1px solid #eee;
+}
+
+.ant-menu-item {
+    height: 50px;
+    display: flex;
+    align-items: center;
+    padding-left: 24px;
+    color: #fff;
+}
+
+.ant-menu-item-selected {
+    background-color: #1890ff !important;
+    border-radius: 10px;
+    color: #fff !important;
+}
+
+.ant-menu-item:hover {
+    background-color: #1890ff !important;
+    color: #fff !important;
+}
+
+.ant-menu-item .ant-menu-item-icon {
+    font-size: 20px;
+    margin-right: 16px;
+    color: #fff;
+}
+
+.ant-menu-item .ant-typography {
+    color: #fff;
+}
+
+.ant-menu-item-selected .ant-typography {
+    font-weight: bold;
+}
+
+/* Estilo do rodapé */
+.sider-footer .ant-typography {
+    margin-left: 10px;
+    color: #fff; /* Texto do rodapé branco */
+}
+
+.sider-footer .ant-avatar {
+    background-color: #1890ff;
+}
+
+/* Divisores brancos */
+.ant-divider {
+    background-color: #fff;
+}
