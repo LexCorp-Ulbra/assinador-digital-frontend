@@ -56,7 +56,7 @@ const NovoDocumento = () => {
             Criar Novo Documento
           </Title>
           <Text style={{ display: 'block', marginBottom: '24px', textAlign: 'center' }}>
-            Preencha os detalhes abaixo para criar um novo documento. Você pode optar por assinar o documento ao final.
+            Preencha os detalhes abaixo para criar um novo documento.
           </Text>
           <Form
             {...formItemLayout}
@@ -79,14 +79,6 @@ const NovoDocumento = () => {
               rules={[{ required: true, message: 'Por favor, insira o conteúdo do documento!' }]}
             >
               <Input.TextArea rows={6} placeholder="Escreva o conteúdo do documento" />
-            </Form.Item>
-            <Form.Item
-              name="signDocument"
-              label="Assinar Documento"
-              valuePropName="checked"
-              style={{ marginBottom: '24px' }}
-            >
-              <Switch onChange={handleSwitchChange} />
             </Form.Item>
             <Form.Item {...buttonLayout}>
               <Button type="primary" htmlType="submit" block>

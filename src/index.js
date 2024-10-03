@@ -9,6 +9,8 @@ import DocumentosUsuario from "./DocumentosUsuario";
 import Documentos from "./Pages/Documentos";
 import DocumentoDetalhes from "./DocumentoDetalhes";
 import NovoDocumento from "./Pages/NovoDocumento";
+import CriarCertificado from "./Pages/CriarCertificado";
+import ValidarDocumento from "./Pages/ValidarDocumento";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -21,6 +23,8 @@ root.render(
         <Route path="/documentos" element={<Documentos />} />
         <Route path="/documentoUsuario" element={<DocumentosUsuario />} />
         <Route path="/novoDocumento" element={<NovoDocumento />} />
+        <Route path="/criarCertificado" element={<CriarCertificado />} />
+        <Route path="/validar" element={<ValidarDocumento />} />
       </Routes>
     </Router>
   </React.StrictMode>

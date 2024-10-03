@@ -46,18 +46,6 @@ const Documentos = () => {
     return text.length > maxLength ? `${text.substring(0, maxLength)}...` : text;
   };
 
-  const renderStatusTag = (signature) => {
-    return signature ? (
-      <Tag color="green" style={{ position: "absolute", top: 10, right: 10 }}>
-        Assinado
-      </Tag>
-    ) : (
-      <Tag color="red" style={{ position: "absolute", top: 10, right: 10 }}>
-        Não Assinado
-      </Tag>
-    );
-  };
-
   const handlePageChange = (page, size) => {
     setCurrentPage(page);
     setPageSize(size);
@@ -115,7 +103,6 @@ const Documentos = () => {
                     {truncateText(item.title, 40)}
                   </Text>
                 </div>
-                {renderStatusTag(item.signature)}
                 <div
                   style={{
                     flex: 1,
