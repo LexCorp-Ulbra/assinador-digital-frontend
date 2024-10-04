@@ -1,6 +1,6 @@
 // src/components/ValidarDocumento.js
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Button,
   Typography,
@@ -12,51 +12,35 @@ import {
   Col,
   message,
   Tag,
-  Select,
   Upload,
+  Form,
 } from "antd";
 import { UploadOutlined, FileSearchOutlined } from "@ant-design/icons";
 import axios from "axios";
-import LayoutWrapper from '../Components/LayoutWrapper'; // Verifique o caminho conforme a estrutura do seu projeto
+import LayoutWrapper from '../Components/LayoutWrapper'; // Ajuste o caminho conforme a estrutura do seu projeto
 
 const { Title, Text } = Typography;
-const { Option } = Select;
 
 const ValidarDocumento = () => {
-  const [documents, setDocuments] = useState([]);
-  const [selectedDocumentId, setSelectedDocumentId] = useState(null);
-  const [signatureFile, setSignatureFile] = useState(null);
+  const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [validationResult, setValidationResult] = useState(null);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchDocuments = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        const response = await axios.get("http://localhost:5000/api/documents", {
-          headers: {
-            "x-auth-token": token,
-          },
-        });
-        setDocuments(response.data);
-      } catch (err) {
-        console.error("Erro ao buscar documentos:", err);
-        message.error("Erro ao buscar documentos.");
-      }
-    };
+  // Função para lidar com a submissão do formulário
+  const onFinish = async (values) => {
+    const { assinaturaDigital, documento, certificado } = values;
 
-    fetchDocuments();
-  }, []);
-
-  const handleUploadSignature = (file) => {
-    setSignatureFile(file);
-    return false; // Impede upload automático
-  };
-
-  const handleValidate = async () => {
-    if (!selectedDocumentId || !signatureFile) {
-      message.error("Por favor, selecione um documento e carregue a assinatura.");
+    // Verificar se todos os arquivos foram carregados
+    if (
+      !assinaturaDigital ||
+      assinaturaDigital.length === 0 ||
+      !documento ||
+      documento.length === 0 ||
+      !certificado ||
+      certificado.length === 0
+    ) {
+      message.error("Por favor, faça o upload de todos os arquivos necessários.");
       return;
     }
 
@@ -65,12 +49,15 @@ const ValidarDocumento = () => {
     setError(null);
 
     const formData = new FormData();
-    formData.append('signature', signatureFile);
+    formData.append("assinaturaDigital", assinaturaDigital[0].originFileObj);
+    formData.append("documento", documento[0].originFileObj);
+    formData.append("certificado", certificado[0].originFileObj);
 
     try {
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem("token"); // Certifique-se de que o token está armazenado no localStorage
+
       const response = await axios.post(
-        `http://localhost:5000/api/documents/${selectedDocumentId}/validate`,
+        "http://localhost:5000/api/documentos/validar",
         formData,
         {
           headers: {
@@ -82,73 +69,133 @@ const ValidarDocumento = () => {
 
       setValidationResult(response.data);
       message.success("Validação realizada com sucesso.");
+      form.resetFields();
     } catch (err) {
       console.error("Erro ao validar assinatura:", err);
       setError(err.response?.data?.error || "Erro ao validar assinatura.");
-      message.error("Erro ao validar assinatura.");
+      message.error(err.response?.data?.error || "Erro ao validar assinatura.");
     } finally {
       setLoading(false);
     }
   };
 
+  // Função para validar os tipos de arquivos
+  const beforeUpload = (file) => {
+    return false; // Impede upload automático
+  };
+
   return (
     <LayoutWrapper>
-      <Card style={{ maxWidth: "800px", margin: "24px auto", padding: "24px" }}>
+      <Card
+        style={{
+          maxWidth: "800px",
+          margin: "40px auto",
+          padding: "24px",
+          borderRadius: "12px",
+          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+        }}
+      >
         <Title level={3} style={{ textAlign: "center" }}>
           Validar Assinatura do Documento
         </Title>
+        <Text type="secondary" style={{ display: "block", textAlign: "center", marginBottom: "24px" }}>
+          Faça o upload do documento, da assinatura digital e do certificado para validar a assinatura.
+        </Text>
         <Divider />
-        <Row gutter={[16, 16]} justify="center">
-          <Col xs={24} sm={24}>
-            <Select
-              placeholder="Selecione um Documento"
-              style={{ width: "100%" }}
-              onChange={(value) => setSelectedDocumentId(value)}
-              value={selectedDocumentId}
-            >
-              {documents.map((doc) => (
-                <Option key={doc._id} value={doc._id}>
-                  {doc.title}
-                </Option>
-              ))}
-            </Select>
-          </Col>
-          <Col xs={24} sm={24}>
-            <Upload
-              beforeUpload={handleUploadSignature}
-              accept=".txt,.sig" // Ajuste os tipos de arquivos conforme necessário
-              maxCount={1}
-              showUploadList={{ showRemoveIcon: true }}
-            >
-              <Button icon={<UploadOutlined />}>Upload da Assinatura</Button>
-            </Upload>
-          </Col>
-        </Row>
-        <Row justify="center" style={{ marginTop: "24px" }}>
-          <Button
-            type="primary"
-            icon={<FileSearchOutlined />}
-            onClick={handleValidate}
-            disabled={!selectedDocumentId || !signatureFile}
-          >
-            Validar Assinatura
-          </Button>
-        </Row>
-        <Divider />
-        {loading && (
-          <div style={{ textAlign: "center", marginTop: "24px" }}>
-            <Spin tip="Validando assinatura..." />
-          </div>
-        )}
+
         {error && (
           <Alert
             message="Erro"
             description={error}
             type="error"
             showIcon
-            style={{ marginTop: "24px" }}
+            style={{ marginBottom: "24px" }}
           />
         )}
+
+        <Form
+          form={form}
+          layout="vertical"
+          onFinish={onFinish}
+        >
+          <Form.Item
+            name="assinaturaDigital"
+            label="Assinatura Digital (.txt, .sig)"
+            rules={[
+              { required: true, message: "Por favor, faça o upload da assinatura digital." },
+            ]}
+          >
+            <Upload
+              name="assinaturaDigital"
+              accept=".txt,.sig"
+              multiple={false}
+              beforeUpload={beforeUpload}
+              maxCount={1}
+              showUploadList={{
+                showRemoveIcon: true,
+              }}
+            >
+              <Button icon={<UploadOutlined />}>Clique para Upload da Assinatura Digital</Button>
+            </Upload>
+          </Form.Item>
+
+          <Form.Item
+            name="documento"
+            label="Documento (.txt, .pdf, .doc, .docx)"
+            rules={[
+              { required: true, message: "Por favor, faça o upload do documento." },
+            ]}
+          >
+            <Upload
+              name="documento"
+              accept=".txt,.pdf,.doc,.docx"
+              multiple={false}
+              beforeUpload={beforeUpload}
+              maxCount={1}
+              showUploadList={{
+                showRemoveIcon: true,
+              }}
+            >
+              <Button icon={<UploadOutlined />}>Clique para Upload do Documento</Button>
+            </Upload>
+          </Form.Item>
+
+          <Form.Item
+            name="certificado"
+            label="Certificado Digital (.pem)"
+            rules={[
+              { required: true, message: "Por favor, faça o upload do certificado digital." },
+            ]}
+          >
+            <Upload
+              name="certificado"
+              accept=".pem"
+              multiple={false}
+              beforeUpload={beforeUpload}
+              maxCount={1}
+              showUploadList={{
+                showRemoveIcon: true,
+              }}
+            >
+              <Button icon={<UploadOutlined />}>Clique para Upload do Certificado</Button>
+            </Upload>
+          </Form.Item>
+
+          <Form.Item>
+            <Button type="primary" htmlType="submit" block disabled={loading}>
+              {loading ? <Spin /> : "Validar Assinatura"}
+            </Button>
+          </Form.Item>
+        </Form>
+
+        <Divider />
+
+        {loading && (
+          <div style={{ textAlign: "center", marginTop: "24px" }}>
+            <Spin tip="Validando assinatura..." />
+          </div>
+        )}
+
         {validationResult && (
           <Card style={{ marginTop: "24px" }}>
             <Title level={4}>Resultado da Validação</Title>
@@ -159,14 +206,16 @@ const ValidarDocumento = () => {
               <Tag color="red">Assinatura Inválida</Tag>
             )}
             <Divider />
-            {validationResult.valid && (
+            {validationResult.valid ? (
               <>
                 <Text strong>Assinado por: </Text>
-                <Text>{validationResult.signedBy}</Text>
+                <Text>{validationResult.signedBy || "Desconhecido"}</Text>
                 <br />
                 <Text strong>Assinado em: </Text>
-                <Text>{new Date(validationResult.signedAt).toLocaleString()}</Text>
+                <Text>{validationResult.signedAt ? new Date(validationResult.signedAt).toLocaleString() : "Desconhecido"}</Text>
               </>
+            ) : (
+              <Text type="danger">A assinatura não é válida para o documento fornecido.</Text>
             )}
           </Card>
         )}

@@ -32,13 +32,16 @@ const Sidebar = () => {
                 style={{ borderRight: 0, marginTop: '40px', backgroundColor: "#001529" }}
             >
                 <Menu.ItemGroup key="g1" title={<Text style={{ color: "#fff" }}>Documentos</Text>} style={{ marginBottom: '10px' }}>
-                    <Menu.Item key="1" icon={<FileOutlined style={{ fontSize: '20px', color: "#fff" }} />} className="ant-menu-item">
+                    {/* <Menu.Item key="1" icon={<FileOutlined style={{ fontSize: '20px', color: "#fff" }} />} className="ant-menu-item">
                         <Link to="/documentos"><Text style={{ color: "#fff" }}>Todos Documentos</Text></Link>
+                    </Menu.Item> */}
+                    <Menu.Item key="1" icon={<PlusOutlined style={{ fontSize: '20px', color: "#fff" }} />} className="ant-menu-item">
+                        <Link to="/assinar"><Text style={{ color: "#fff" }}>Assinar Documento</Text></Link>
                     </Menu.Item>
 
-                    <Menu.Item key="3" icon={<PlusOutlined style={{ fontSize: '20px', color: "#fff" }} />} className="ant-menu-item">
+                    {/* <Menu.Item key="3" icon={<PlusOutlined style={{ fontSize: '20px', color: "#fff" }} />} className="ant-menu-item">
                         <Link to="/novoDocumento"><Text style={{ color: "#fff" }}>Novo Documento</Text></Link>
-                    </Menu.Item>
+                    </Menu.Item> */}
                 </Menu.ItemGroup>
 
                 <Divider style={{ backgroundColor: "#fff" }} />
